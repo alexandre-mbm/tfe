@@ -30,6 +30,17 @@ TMP="chrome/locale/pt-BR"
 
 XPI=~/.mozilla/firefox/$PROFILE/extensions/$XPI
 
+help () {
+    PROGRAM=tfe
+    echo
+    echo "  $PROGRAM backup     - gets current xpi from Firefox profile"
+    echo "  $PROGRAM original   - copy last backup as original version (take care)"
+    echo "  $PROGRAM install    - installs translations files on Firefox (restart needed)"
+    echo "  $PROGRAM restore    - puts the original xpi into Firefox profile"
+    echo "  $PROGRAM help       - shows this help"
+    echo
+}
+
 case "$1" in
     backup)
         cp $XPI $NAME-$(date +%Y%m%d%k%M%S).xpi
@@ -49,6 +60,6 @@ case "$1" in
     restore)
         cp $NAME-original.xpi $XPI
         ;;
-    *)
-        echo "none"  # TODO
+    help|*)
+        help
 esac
