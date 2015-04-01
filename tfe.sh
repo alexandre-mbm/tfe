@@ -23,7 +23,7 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-NAME="screengrab"
+NAME="screengrab"  # exemplo.dtd exemplo.properties exemplo.xpi ...
 PROFILE="qzxm84qt.default"
 XPI="{02450914-cdd9-410f-b1da-db004e18c671}.xpi"
 TMP="chrome/locale/pt-BR"
@@ -33,22 +33,22 @@ XPI=~/.mozilla/firefox/$PROFILE/extensions/$XPI
 case "$1" in
     backup)
         cp $XPI $NAME-$(date +%Y%m%d%k%M%S).xpi
-        LAST_BACKUP=$(ls -1 screengrab-[^o]*.xpi | sort -r | head -n 1)
-        ln -sf $LAST_BACKUP screengrab.xpi
+        LAST_BACKUP=$(ls -1 $NAME-[^o]*.xpi | sort -r | head -n 1)
+        ln -sf $LAST_BACKUP $NAME.xpi
         ;;
     original)
-        cp screengrab.xpi screengrab-original.xpi
+        cp $NAME.xpi $NAME-original.xpi
         ;;
     install)
         install -Dm644 contents.rdf $TMP/contents.rdf
-        install -Dm644 screengrab.dtd $TMP/screengrab.dtd
-        install -Dm644 screengrab.properties $TMP/screengrab.properties
+        install -Dm644 $NAME.dtd $TMP/$NAME.dtd
+        install -Dm644 $NAME.properties $TMP/$NAME.properties
         7z a -r $XPI $TMP
         7z a $XPI chrome.manifest install.rdf
         ;;
     restore)
-        cp screengrab-original.xpi $XPI
+        cp $NAME-original.xpi $XPI
         ;;
     *)
-        echo "none"
+        echo "none"  # TODO
 esac
