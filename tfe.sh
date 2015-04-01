@@ -38,6 +38,7 @@ help () {
     echo "  $PROGRAM extract    - extracts files from the original xpi (take care with rewrites)"
     echo "  $PROGRAM install    - installs translations files on Firefox (restart needed)"
     echo "  $PROGRAM restore    - puts the original xpi into Firefox profile"
+    echo "  $PROGRAM list       - helper for config; lists all profiles and its extensions"
     echo "  $PROGRAM help       - shows this help"
     echo
 }
@@ -70,6 +71,27 @@ case "$1" in
         else
             echo "The file $NAME-original.xpi is needed!"
         fi
+        ;;
+    list)
+        for xpi in $(ls ~/.mozilla/firefox/*/extensions/*.xpi); do
+            profile=$(echo "$xpi" | cut -d"/" -f6)
+            filename=$(echo "$xpi" | cut -d"/" -f8)
+            name=$(7z e -so "$xpi" chrome.manifest 2>/dev/null |
+                    grep "^content" |
+                    tail -n 1 |
+                    sed "s/[\t ][\t ]*/ /g" |
+                    cut -d" " -f2)
+            echo "NAME=$name"
+            echo "PROFILE=$profile"
+            echo "XPI=$filename"
+            echo "LOCALE_SRC=en-US"  # TODO: escolher programaticamente TODO: variável lá em cima
+            echo
+
+            # TODO: estudar e implementar extensões com outras estruturas
+            [ -z "$name" ] && echo "7z e -so $xpi chrome.manifest 2>/dev/null" && echo
+            [ -z "$name" ] && echo "7z l $xpi chrome.manifest 2>/dev/null" && echo
+
+        done
         ;;
     help|*)
         help
