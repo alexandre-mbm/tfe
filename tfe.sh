@@ -35,6 +35,7 @@ help () {
     echo
     echo "  $PROGRAM backup     - gets current xpi from Firefox profile"
     echo "  $PROGRAM original   - copy last backup as original version (take care)"
+    echo "  $PROGRAM extract    - extracts files from the original xpi (take care with rewrites)"
     echo "  $PROGRAM install    - installs translations files on Firefox (restart needed)"
     echo "  $PROGRAM restore    - puts the original xpi into Firefox profile"
     echo "  $PROGRAM help       - shows this help"
@@ -59,6 +60,16 @@ case "$1" in
         ;;
     restore)
         cp $NAME-original.xpi $XPI
+        ;;
+    extract)
+        if [ -e "$NAME-original.xpi" ]; then
+            7z e $NAME-original.xpi chrome.manifest install.rdf
+            7z e $NAME-original.xpi chrome/locale/en-US/contents.rdf
+            7z e $NAME-original.xpi chrome/locale/en-US/$NAME.dtd
+            7z e $NAME-original.xpi chrome/locale/en-US/$NAME.properties
+        else
+            echo "The file $NAME-original.xpi is needed!"
+        fi
         ;;
     help|*)
         help
